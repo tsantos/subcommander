@@ -55,7 +55,8 @@ module Subcommander
     end
     
     def slop cmd_name
-      cmd_name + ' ' * (@file_order.max.length - cmd_name.length)
+      max_len = @file_order.max { |a,b| a.length <=> b.length }.length
+      cmd_name + ' ' * (max_len - cmd_name.length)
     end
     
     def print_help
@@ -106,7 +107,7 @@ module Subcommander
     end
     
     def banner= str
-      @opts.banner = "Usage: #{str}"
+      @opts.banner = "  Usage: #{str}"
     end
         
     def opt *orig_args
@@ -137,7 +138,7 @@ module Subcommander
         puts @help
       end
       if (@usage)
-        @opts.banner = "Usage: #{@usage}"
+        @opts.banner = "  Usage: #{@usage}"
         puts
       end
       puts @opts.to_s

@@ -3,7 +3,7 @@ require 'rake/gempackagetask'
 require 'rake/clean'
 
 GEM         = 'subcommander'
-GEM_VERSION = '1.0.0'
+GEM_VERSION = '1.0.1'
 
 spec = Gem::Specification.new do |s|
   s.author      = 'Tom Santos'
@@ -12,7 +12,7 @@ spec = Gem::Specification.new do |s|
   s.name        = GEM
   s.version     = GEM_VERSION
 
-  s.summary     = "A library for cleanly handling subcommands (and options)"
+  s.summary     = "A library for cleanly handling subcommands (and options), like Git"
   s.description = s.summary
   s.has_rdoc    = false
   s.platform    = Gem::Platform::RUBY
