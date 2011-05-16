@@ -3,7 +3,7 @@ require 'rake/gempackagetask'
 require 'rake/clean'
 
 GEM         = 'subcommander'
-GEM_VERSION = '1.0.1'
+GEM_VERSION = '1.0.2'
 
 spec = Gem::Specification.new do |s|
   s.author      = 'Tom Santos'

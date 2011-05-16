@@ -2,23 +2,19 @@
 require 'optparse'
 
 module Subcommander
-  
-  def pop! stack
-    [stack[0], stack[1..-1]]
-  end
-    
+      
   class Subcommander
     attr_accessor :desc,
                   :args,
                   :version
     
-    def initialize
+    def initialize args
       @commands = {}
       @descriptions = {}
       @file_order = []
-      unless ARGV.empty?
-        args = ARGV.clone
-        @sub_cmd, @args = pop!(args)
+      unless args.empty?
+        @args = args.clone()
+        @sub_cmd = @args.shift()
       else
         @args = []
       end
@@ -27,7 +23,7 @@ module Subcommander
         
     def subcommand cmd_name, desc, &block
       name = cmd_name.to_s
-      sub_cmd = Subcommand.new(@args.clone, cmd_name, desc, &block)
+      sub_cmd = Subcommand.new(@args.clone(), cmd_name, desc, &block)
       @commands[name] = sub_cmd
       @file_order << name
     end
@@ -43,20 +39,15 @@ module Subcommander
       sub_cmd.go!
     end
     
-    private    
     def print_usage
       puts "\n#{@desc}\n\n"
       puts "  Subcommands:"
       @file_order.each do |cmd|
         puts "    #{slop(cmd)}  #{@commands[cmd].desc}" 
       end
-      puts "\nv " + @version if @version
+      puts
+      puts "v " + @version if @version
       exit
-    end
-    
-    def slop cmd_name
-      max_len = @file_order.max { |a,b| a.length <=> b.length }.length
-      cmd_name + ' ' * (max_len - cmd_name.length)
     end
     
     def print_help
@@ -69,12 +60,18 @@ module Subcommander
         end
         exit
       end
-    end    
+    end
+    
+    private
+    def slop cmd_name
+      max_len = @file_order.max { |a,b| a.length <=> b.length }.length
+      cmd_name + ' ' * (max_len - cmd_name.length)
+    end
   end
     
   def subcommander
     unless defined?(@@subcommander)
-      @@subcommander = Subcommander.new
+      @@subcommander = Subcommander.new(ARGV)
     end
     @@subcommander
   end
@@ -99,6 +96,7 @@ module Subcommander
       @opts.banner = ""
       @arity = -1 # Don't care how many args
       @props = {}
+      @sub_cmdr = nil
       block.call(self)
     end
     
@@ -112,7 +110,7 @@ module Subcommander
         
     def opt *orig_args
       args = orig_args.clone()
-      prop, args = pop!(args)
+      prop = args.shift()
       @opts.on *args do |arg|
         @props[prop] = arg
       end
@@ -123,6 +121,10 @@ module Subcommander
     end
     
     def go!
+      if @sub_cmdr
+        @sub_cmdr.go!
+        return
+      end
       parse_args()
       num_remaining = @props[:remaining_args].length
       if @arity > -1 && num_remaining != @arity
@@ -130,6 +132,14 @@ module Subcommander
         exit
       end
       @block.call if @block
+    end
+    
+    def subcommand name, desc, &block
+      unless @sub_cmdr
+        @sub_cmdr = Subcommander.new(@args.clone())
+        @sub_cmdr.desc = "  The #{@name} subcommand has the following subcommands:"
+      end
+      @sub_cmdr.subcommand(name, desc, &block)
     end
     
     def print_help
