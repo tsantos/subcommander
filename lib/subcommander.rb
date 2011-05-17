@@ -40,7 +40,11 @@ module Subcommander
     end
     
     def print_usage
-      puts "\n#{@desc}\n\n"
+      desc = @desc
+      if @desc.kind_of?(Proc)
+        desc = @desc.call().rstrip
+      end
+      puts "\n#{desc}\n\n"
       puts "  Subcommands:"
       @file_order.each do |cmd|
         puts "    #{slop(cmd)}  #{@commands[cmd].desc}" 
@@ -137,7 +141,7 @@ module Subcommander
     def subcommand name, desc, &block
       unless @sub_cmdr
         @sub_cmdr = Subcommander.new(@args.clone())
-        @sub_cmdr.desc = "  The #{@name} subcommand has the following subcommands:"
+        @sub_cmdr.desc = lambda { @help }
       end
       @sub_cmdr.subcommand(name, desc, &block)
     end
