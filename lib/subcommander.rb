@@ -141,7 +141,7 @@ module Subcommander
     def subcommand name, desc, &block
       unless @sub_cmdr
         @sub_cmdr = Subcommander.new(@args.clone())
-        @sub_cmdr.desc = lambda { @help }
+        @sub_cmdr.desc = lambda { @help ? @help : @desc }
       end
       @sub_cmdr.subcommand(name, desc, &block)
     end
