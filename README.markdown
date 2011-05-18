@@ -6,7 +6,7 @@ More description coming... this is basically a placeholder for now.
 
 ### Simple Example:
 
-		%w[rubygems subcommander].each { |m| require m }
+    %w[rubygems subcommander].each { |m| require m }
     include Subcommander
     
     subcommander.version = '1.0.0'
@@ -15,12 +15,12 @@ More description coming... this is basically a placeholder for now.
     subcommand :run, "Runs the simple tool" do |sc|
       sc.opt :just_kidding, '-k', '--just-kidding', "Don't really run the simple tool"
       sc.exec {
-	      # This is where the subcommand has its implementation
-	      if sc[:just_kidding]
-	        puts "Not really running"
-	      else
-	        puts "Running!"
-	      end
+        # This is where the subcommand has its implementation
+        if sc[:just_kidding]
+          puts "Not really running"
+        else
+          puts "Running!"
+        end
       }
     end
     
@@ -28,38 +28,38 @@ More description coming... this is basically a placeholder for now.
 
 ### Nested Subcommands Example:
 
-		%w[rubygems subcommander].each { |m| require m }
-		include Subcommander
+    %w[rubygems subcommander].each { |m| require m }
+    include Subcommander
 
-		subcommander.version = '1.0.0'
-		subcommander.desc = "ComplexTool is ephemeral and only here to demonstrate Subcommander."
+    subcommander.version = '1.0.0'
+    subcommander.desc = "ComplexTool is ephemeral and only here to demonstrate Subcommander."
 
-		subcommand :run, "Commands for running the complex tool" do |run|
-		  run.subcommand 'on-foot', "Run down the street" do |sc|
-		    sc.usage = "complextool run on-foot [-f | -s]"
-				sc.opt :fast, '-f', '--fast', "Run fast!"
-				sc.opt :slow, '-s', '--slow', "Run slow."
-				sc.exec {
-					speed = "at a normal pace"
-					if sc[:fast]
-						speed = 'fast'
-					elsif sc[:slow]
-					  speed = 'slow'
-					end
-					puts "We're running #{speed}"
-				}
-		  end
-		  run.subcommand 'an-app', "Run an app" do |sc|
-		    sc.arity = 1
-		    sc.usage = "complextool run an-app NAME"
-				sc.exec {
-					app = sc[:remaining_args][0]
-					puts "Running #{app}"
-				}
-		  end
-		end
+    subcommand :run, "Commands for running the complex tool" do |run|
+      run.subcommand 'on-foot', "Run down the street" do |sc|
+        sc.usage = "complextool run on-foot [-f | -s]"
+        sc.opt :fast, '-f', '--fast', "Run fast!"
+        sc.opt :slow, '-s', '--slow', "Run slow."
+        sc.exec {
+          speed = "at a normal pace"
+          if sc[:fast]
+            speed = 'fast'
+          elsif sc[:slow]
+            speed = 'slow'
+          end
+          puts "We're running #{speed}"
+        }
+      end
+      run.subcommand 'an-app', "Run an app" do |sc|
+        sc.arity = 1
+        sc.usage = "complextool run an-app NAME"
+        sc.exec {
+          app = sc[:remaining_args][0]
+          puts "Running #{app}"
+        }
+      end
+    end
 
-		subcommander.go!
+    subcommander.go!
 
 ---------------------------
 
