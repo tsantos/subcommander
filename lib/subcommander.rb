@@ -130,7 +130,7 @@ module Subcommander
         return
       end
       parse_args()
-      num_remaining = @props[:remaining_args].length
+      num_remaining = @props[:args].length
       if @arity > -1 && num_remaining != @arity
         puts "We expected #{@arity} arguments and #{num_remaining} were provided."
         exit
@@ -161,7 +161,8 @@ module Subcommander
     
     private
     def parse_args
-      @props[:remaining_args] = @opts.parse(@args)
+      @props[:args] = @opts.parse(@args)
+      @props[:remaining_args] = @props[:args] # for legacy support
     end
   end
 end

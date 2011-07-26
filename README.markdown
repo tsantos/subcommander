@@ -53,7 +53,7 @@ More description coming... this is basically a placeholder for now.
         sc.arity = 1
         sc.usage = "complextool run an-app NAME"
         sc.exec {
-          app = sc[:remaining_args][0]
+          app = sc[:args][0]
           puts "Running #{app}"
         }
       end
