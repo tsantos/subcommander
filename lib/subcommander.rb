@@ -108,6 +108,10 @@ module Subcommander
       @props[key]
     end
     
+    def []= key, value
+      @props[key] = value
+    end
+    
     def banner= str
       @opts.banner = "  Usage: #{str}"
     end
